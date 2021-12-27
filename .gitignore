@@ -1,0 +1,4 @@
+# All .env files are usually secret related, do not commit them!
+*.env
+# Unless it is an example file
+!*.example.env
