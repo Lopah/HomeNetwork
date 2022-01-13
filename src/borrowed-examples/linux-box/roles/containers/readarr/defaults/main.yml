@@ -1,6 +1,0 @@
----
-container_name: readarr
-
-dashboard_url: "http://readarr.box/"
-
-homer_category: media

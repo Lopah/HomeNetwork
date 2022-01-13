@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: true
+  roles:
+    #
+    # Core
+    #
+    - role: system
+      tags:
+        - system
+    - role: docker
+      tags:
+        - docker
+
+    - role: containers/services/nextcloud
+      tags:
+        - nextcloud
+        - containers

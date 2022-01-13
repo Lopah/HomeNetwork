@@ -1,7 +1,0 @@
-container_name: photoprism
-
-dashboard_url: "http://photoprism.box"
-
-homer_category: services
-
-dashboard_name: "PhotoPrism"

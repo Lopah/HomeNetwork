@@ -1,0 +1,5 @@
+[all]
+ansible-nas-test ansible_connection=local ansible_host=localhost
+
+[home]
+ansible-nas-test ansible_connection=local ansible_host=localhost

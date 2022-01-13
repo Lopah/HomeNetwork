@@ -101,7 +101,7 @@ awx_official=true
 
 Now we run playbook
 
-`sudo ansible-playbook -i inventory install.yml`
+`sudo ansible-playbook -i inventory install.yaml`
 
 And check the container statuses
 

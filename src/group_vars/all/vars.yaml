@@ -1,0 +1,103 @@
+#
+# Misc
+#
+timezone: Europe/Prague
+
+dns_nameservers: [8.8.8.8]
+
+ntp_timezone: "{{ timezone }}"
+
+locale: en_US.UTF-8
+
+lan_network: "{{ '.'.join(ansible_default_ipv4.address.split('.')[0:3]) }}.0/24"
+
+fish_prompt_color: blue
+
+keyboard_layout: us
+
+username: lopah
+
+guid: "1000"
+
+shell: /usr/bin/fish
+
+docker_dir: /opt/docker/data
+
+dotfiles_repo: https://github.com/lopah/dotfiles
+
+enable_pikvm: true
+
+pikvm_address: pikvm.box
+
+spindown_time: 600  # in seconds
+
+colorscheme: nord
+
+#
+# Apt mirrors
+#
+version: focal
+
+apt_mirror: http://ftp.uni-mainz.de/ubuntu/
+
+
+#
+# Email credentials (for SMART and Snapraid error reporting)
+#
+
+email: subaruthepride@gmail.com
+
+email_login: "{{ email }}"
+
+email_smtp_host: smtp.gmail.com
+
+email_smtp_port: 465
+
+email_smtp_port_startls: 587
+
+msmtp_accounts:
+  - account: mailbox
+    host: "{{ email_smtp_host }}"
+    port: "{{ email_smtp_port_startls }}"
+    auth: "on"
+    from: "{{ email }}"
+    user: "{{ email }}"
+    password: "{{ email_password }}"
+
+msmtp_default_account: "mailbox"
+
+msmtp_alias_default: "{{ email }}"
+
+#
+# SSH (geerlingguy.security)
+#
+security_ssh_port: 22
+
+security_sudoers_passwordless: ["{{ username }}"]
+
+security_autoupdate_reboot: "true"
+
+security_autoupdate_mail_to: "{{ email }}"
+
+security_autoupdate_mail_on_error: true
+
+#
+# Enable/disable individual Docker containers
+#
+enable_services: true
+enable_system: true
+# Public-facing services
+enable_nextcloud: true
+
+#
+# Secret variables (encrypt with ansible-vault)
+#
+nextcloud_mysql_root_password: ""
+nextcloud_mysql_password: ""
+email_password: ""
+password: ""
+ssh_public_key: ""
+# host: ""
+# host_local: ""
+# namecheap_host: ""
+# namecheap_token: ""

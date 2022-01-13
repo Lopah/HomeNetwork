@@ -1,0 +1,126 @@
+---
+- name: Update specific tasks
+  become: true
+  when: ansible_facts['distribution'] == 'Ubuntu'
+  block:
+  - name: Remove cloud-config to avoid boot delay
+    apt:
+      name: cloud-config
+      state: absent
+
+  - name: Make sure iSCSId and Open-iSCSId service are disabled  # noqa ignore-errors
+    service:
+      name: "{{ item }}"
+      state: stopped
+      enabled: false
+    with_items:
+      - iscsid
+      - open-iscsi
+    ignore_errors: true
+
+  - name: Install the apt mirror list
+    block:
+      - name: Check if config exists
+        stat:
+          path: /etc/apt/sources.list
+        register: config_file
+
+      - name: Check source list
+        blockinfile:
+          dest: /etc/apt/sources.list
+          block: "{{ lookup('template', 'sources.list.j2') }}"
+          marker: "#; {mark} ANSIBLE MANAGED BLOCK FOR {{ apt_mirror }} {{ version }}"
+    tags: mirrors
+
+- name: Generate the locale (Debian and Ubuntu)
+  when: ansible_os_family == 'Debian'
+  locale_gen:
+    name: "{{ locale }}"
+    state: present
+
+- name: Update and upgrade apt packages (Debian and Ubuntu)
+  when: ansible_os_family == 'Debian'
+  apt:
+    upgrade: true
+    update_cache: true
+
+- name: Check if reboot required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
+
+- name: Reboot if required
+  reboot:
+    msg: Rebooting due to a kernel update
+  when: reboot_required_file.stat.exists
+
+- name: Install extra packages
+  package:
+    name: "{{ extra_packages }}"
+    state: latest  # noqa package-latest
+
+- name: Clone the latest dotfiles repo  # noqa git-latest
+  git:
+    repo: "{{ dotfiles_repo }}"
+    dest: /home/{{ username }}/dotfiles
+    recursive: false
+    force: true
+
+- name: Stow the dotfiles
+  shell: cd /home/{{ username }}/dotfiles && stow -v */
+  register: stow_result
+  changed_when: stow_result.stdout != ""
+
+- name: Set the default shell
+  user:
+    name: "{{ username }}"
+    shell: "{{ shell }}"
+
+- name: Disable fish greeting  # noqa ignore-errors
+  lineinfile:
+    path: /home/{{ username }}/.config/fish/fish_variables
+    state: present
+    regexp: 'fish_greeting:.+'
+    line: 'SETUVAR fish_greeting:'
+  when: '"fish" in shell'
+  ignore_errors: true
+
+- name: Set the default shell
+  user:
+    name: "{{ username }}"
+    shell: "{{ shell }}"
+
+- name: Set the correct ownership for the user's home folder (not using ansible.builtin.file because of idempotency)
+  shell:
+    cmd: "chown -R {{ username }}:{{ username }} /home/{{ username }}"
+  register: chown_status
+  changed_when: chown_status.stdout != ""
+  tags: skip_ansible_lint
+
+- name: Set the hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+  when: inventory_hostname != "localhost"
+
+- name: Replace the hostname entry with our own
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    insertafter: ^127\.0\.0\.1 *localhost
+    line: "127.0.0.1 {{ inventory_hostname }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: inventory_hostname != "localhost"
+
+- name: Suppress login messages  # noqa risky-file-permissions
+  file:
+    name: /home/{{ username }}/.hushlogin
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+
+- name: Disable cron e-mail notifications
+  cron:
+    name: MAILTO
+    env: true
+    job: ""
