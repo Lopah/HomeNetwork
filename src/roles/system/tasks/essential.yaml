@@ -57,9 +57,9 @@
 - name: Install extra packages
   package:
     name: "{{ extra_packages }}"
-    state: latest  # noqa package-latest
+    state: latest
 
-- name: Clone the latest dotfiles repo  # noqa git-latest
+- name: Clone the latest dotfiles repo
   git:
     repo: "{{ dotfiles_repo }}"
     dest: /home/{{ username }}/dotfiles

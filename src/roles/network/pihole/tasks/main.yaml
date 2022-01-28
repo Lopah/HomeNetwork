@@ -5,11 +5,13 @@
     state: directory
     recurse: true
 
-- name: Copy the unbound configuration file  # noqa risky-file-permissions
+- name: Copy the unbound configuration file
   template:
     src: unbound.j2
     dest: "{{ docker_dir }}/{{ container_name }}/unbound.conf.d/pi-hole.conf"
-
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
 
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:

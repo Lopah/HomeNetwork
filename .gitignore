@@ -31,3 +31,4 @@ benchparse/
 hosts
 secret.yaml
 passwordfile
+secrets/*

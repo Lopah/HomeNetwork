@@ -24,7 +24,7 @@
         repo: deb https://download.docker.com/linux/ubuntu bionic stable
         state: present
 
-- name: Update apt and install docker-ce  # noqa package-latest
+- name: Update apt and install docker-ce
   when: ansible_facts['os_family'] == 'Debian'
   apt:
     update_cache: true

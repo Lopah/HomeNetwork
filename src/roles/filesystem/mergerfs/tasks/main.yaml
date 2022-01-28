@@ -1,0 +1,27 @@
+---
+
+- name: check if MergerFS is installed
+  command: which mergerfs
+  ignore_errors: true
+  register: result
+  changed_when: false
+
+- name: Install MergerFS
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - git
+    - g++
+    - pkg-config
+    - git-buildpackage
+    - pandoc
+    - debhelper
+    - libfuse-dev
+    - libattr1-dev
+
+- name: Run MergerFS install script
+  script: get_mergerfs.sh
+  when: result | failed
+
+- name: Mount drives
+  include: mount.yaml
+  when: disks[0] is defined

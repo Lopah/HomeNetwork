@@ -1,13 +1,25 @@
 #
-# Misc
+# Core
 #
+hostname: "{{ inventory_hostname }}"
+
 timezone: Europe/Prague
 
 dns_nameservers: [8.8.8.8]
 
+dot_nameservers: [185.95.218.42@853#dns.digitale-gesellschaft.ch, 94.140.15.140@853#dns-unfiltered.adguard.com]
+
 ntp_timezone: "{{ timezone }}"
 
 locale: en_US.UTF-8
+
+dmz_network: "192.168.44.0/24"
+
+dmz_gateway: "192.168.44.1"
+
+vpn_network: "10.1.1.0/24"
+
+lan_gateway: "192.168.0.1"
 
 lan_network: "{{ '.'.join(ansible_default_ipv4.address.split('.')[0:3]) }}.0/24"
 
@@ -25,13 +37,36 @@ docker_dir: /opt/docker/data
 
 dotfiles_repo: https://github.com/lopah/dotfiles
 
-enable_pikvm: true
-
-pikvm_address: pikvm.box
+boot_drive_serial: ""
 
 spindown_time: 600  # in seconds
 
 colorscheme: nord
+
+subdomains: {
+      'nextcloud': 'nextcloud'
+}
+
+#
+# Extra Packages
+#
+extra_packages:
+  - fish  # noqa yaml
+  - iperf3
+  - speedtest-cli
+  - htop
+  - stow
+  - git
+  - neofetch
+  - neovim
+  - tmux
+  - mosh
+  - rsync
+  - lm-sensors
+  - iotop
+  - ncdu
+  - hddtemp
+  - reptyr
 
 #
 # Apt mirrors
@@ -42,7 +77,7 @@ apt_mirror: http://ftp.uni-mainz.de/ubuntu/
 
 
 #
-# Email credentials (for SMART and Snapraid error reporting)
+# Email credentials (for SMART)
 #
 
 email: subaruthepride@gmail.com
@@ -56,7 +91,7 @@ email_smtp_port: 465
 email_smtp_port_startls: 587
 
 msmtp_accounts:
-  - account: mailbox
+  - account: mailbox  # noqa yaml
     host: "{{ email_smtp_host }}"
     port: "{{ email_smtp_port_startls }}"
     auth: "on"
@@ -82,21 +117,192 @@ security_autoupdate_mail_to: "{{ email }}"
 security_autoupdate_mail_on_error: true
 
 #
-# Enable/disable individual Docker containers
+# Enable/disable functionalities
 #
 enable_services: true
+
 enable_system: true
+
 # Public-facing services
 enable_nextcloud: true
+
+enable_swag: true
+
+enable_bunkerized_nginx: false
+
+# DDNS
+enable_cloudflare_dns: true
+
+enable_ddclient: true
+
+# VPN
+
+enable_openssh: true
+
+# HomePage
+
+enable_homer: true
+
+# Misc
+
+enable_authelia: true
+
+enable_pihole: true
+
+enable_watchtower: true
+
+#
+# Time Machine (Recovery points)
+#
+timemachine_root: /mnt/timemachine
+
+timemachine_drive: /dev/disk/by-label/TimeMachine
+
+enable_timemachine: true
+
+#
+# Samba
+#
+samba_server_string: "{{ hostname }}"
+
+samba_users:
+  - name: "{{ username }}"  # noqa yaml
+    password: "{{ password }}"
+  - name: "{{ additional_users[0].name }}"
+    password:: "{{ additional_users[0].password }}"
+
+samba_global_include: global-include.conf
+
+samba_mitigate_cve_2017_7494: false
+
+samba_server_max_protocol: "SMB3"
+
+samba_server_min_protocol: "SMB3"
+
+samba_shares:
+  - name: Trash  # noqa yaml
+    guest_ok: false
+    public: false
+    read_only: false
+    writable: true
+    owner: "{{ username }}"
+    browseable: true
+    path: "{{ mergerfs_root }}"
+    valid_users: "{{ username }}"
+    write_list: "{{ username }}"
+
+  - name: Downloads
+    guest_ok: false
+    public: false
+    read_only: false
+    writable: true
+    browseable: true
+    owner: "{{ username }}"
+    path: "{{ mergerfs_root }}/Downloads"
+    valid_users: "{{ username }}, {{ additional_users[0].name }}"
+    write_list: "{{ username }}, {{ additional_users[0].name }}"
+
+  - name: Media
+    guest_ok: false
+    public: false
+    read_only: false
+    writable: true
+    browseable: true
+    owner: "{{ username }}"
+    path: "{{ mergerfs_root }}/Media"
+    valid_users: "{{ username }}, {{ additional_users[0].name }}"
+    write_list: "{{ username }}, {{ additional_users[0].name }}"
+
+  - name: TimeMachine
+    guest_ok: false
+    public: false
+    read_only: false
+    owner: "{{ username }}"
+    vfs_objects:
+      - name: fruit  # noqa yaml
+        options:
+        - name: time machine  # noqa yaml
+          value: 'yes'
+      - name: streams_xattr
+    writable: true
+    browseable: true
+    path: "{{ timemachine_root }}"
+    valid_users: "{{ username }}"
+    write_list: "{{ username }}"
+
+  - name: PublicShare
+    guest_ok: true
+    public: true
+    read_only: false
+    writable: true
+    owner: "{{ username }}"
+    browseable: true
+    path: "{{ mergerfs_root }}/PublicShare"
+
+  - name: PrivateShare
+    guest_ok: false
+    public: false
+    read_only: false
+    writable: true
+    owner: "{{ username }}"
+    browseable: true
+    path: "{{ mergerfs_root }}/PrivateShare"
+    valid_users: "{{ username }}"
+    write_list: "{{ username }}"
+
+#
+# MergerFS
+#
+
+mergerfs_root: /mnt/storage
+
+enable_mergerfs: true
+
+disks:
+  - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true}  # noqa yaml
+  - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true}  # noqa yaml
+
+cache_disks:
+  - { path: /mnt/cache1, src: /dev/disk/by-label/Cache1, content: true }  # noqa yaml
+  - { path: /mnt/cache2, src: /dev/disk/by-label/Cache2, content: true }  # noqa yaml
+
+parity_disks:
+  - { path: /mnt/parity1, src: /dev/disk/by-label/Parity1, content: true }  # noqa yaml
+
+#
+# SMART error reporting
+#
+smartd_default_mail_recipients: ["{{ email }}"]
+
+#
+# Security
+#
+enable_iptables: true
+
+enable_fail2ban: true
+
+# We have our own f2b rules
+security_fail2ban_enabled: false
 
 #
 # Secret variables (encrypt with ansible-vault)
 #
+cloudflare_dns_token: ""
+cloudflare_firewall_token: ""
+email_password: ""
+host: ""
+host_local: ""
+pihole_password: ""
 nextcloud_mysql_root_password: ""
 nextcloud_mysql_password: ""
-email_password: ""
 password: ""
 ssh_public_key: ""
+piped_postgresql_password: ""
+swag_htpasswd_password: ""
+swag_htpasswd_user: ""
+godaddy_api_key: ""
+godaddy_api_secret: ""
+godaddy_customer_id: ""
 # host: ""
 # host_local: ""
 # namecheap_host: ""

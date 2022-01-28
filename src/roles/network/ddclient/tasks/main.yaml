@@ -1,5 +1,5 @@
 ---
-- name: Make sure ddclient is installed  # noqa package-latest
+- name: Make sure ddclient is installed
   apt:
     name: ddclient
     state: latest

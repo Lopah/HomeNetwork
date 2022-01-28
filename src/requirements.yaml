@@ -1,4 +1,5 @@
 ---
+
 roles:
   - name: bertvv.samba
   - name: geerlingguy.security
@@ -8,3 +9,6 @@ roles:
   - name: oefenweb.dns
   - name: ironicbadger.ansible_role_snapraid
   - name: veselahouba.crowdsec
+
+collections:
+  - name: ansible.posix

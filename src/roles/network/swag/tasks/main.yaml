@@ -1,0 +1,7 @@
+---
+- include_tasks: check_status.yaml
+- include_tasks: list_services.yaml
+- include_tasks: install_configs.yaml
+- include_tasks: cloudflare_real_ips.yaml
+- include_tasks: networks.yaml
+- include_tasks: docker.yaml

@@ -1,5 +1,5 @@
 ---
-- name: Install required system packages  # noqa package-latest
+- name: Install required system packages
   apt:
     name: avahi-daemon
     state: latest
