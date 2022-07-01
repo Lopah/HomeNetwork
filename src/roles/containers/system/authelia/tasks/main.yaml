@@ -32,7 +32,7 @@
 - name: Install the configuration template
   template:
     src: configuration.yaml.j2
-    dest: "{{ docker_dir }}/{{ container_name }}/configuration.yml"
+    dest: "{{ docker_dir }}/{{ container_name }}/configuration.yaml"
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: 0644
@@ -42,7 +42,7 @@
 - name: Install the users template
   template:
     src: users_database.yaml.j2
-    dest: "{{ docker_dir }}/{{ container_name }}/users_database.yml"
+    dest: "{{ docker_dir }}/{{ container_name }}/users_database.yaml"
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: 0644

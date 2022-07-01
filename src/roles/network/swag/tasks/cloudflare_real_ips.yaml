@@ -35,6 +35,14 @@
     - test nginx
     - restart swag
 
+- name: Setup nginx.conf
+  copy:
+    src: "files/nginx.conf"
+    dest: "{{ docker_dir }}/swag/public/nginx/nginx.conf"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
+
 - name: Add to nginx.conf
   blockinfile:
     path: "{{ docker_dir }}/swag/public/nginx/nginx.conf"

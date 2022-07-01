@@ -8,11 +8,129 @@
     - role: system
       tags:
         - system
+
     - role: docker
       tags:
         - docker
 
+    - role: chriswayg.msmtp-mailer
+      tags:
+        - msmtp
+
+    - role: oefenweb.dns
+      tags:
+        - dns
+      when: inventory_hostname != 'localhost'  # does not work with virtual testing environment.
+
+    - role: geerlingguy.ntp
+      tags:
+        - ntp
+      when: inventory_hostname != 'localhost'  # does not work with virtual testing environment.
+
+    #
+    # Network
+    #
+
+    - role: network/swag
+      become: false
+      tags:
+        - swag
+        - containers
+      when: enable_swag | default(false)
+
+    - role: network/bunkerized-nginx
+      become: false
+      tags:
+        - bunkerized-nginx
+        - containers
+      when: enable_bunkerized_nginx | default(false)
+
+    - role: network/ddclient
+      become: true
+      when: enable_ddclient | default(false)
+      tags:
+        - ddclient
+
+    - role: network/duckdns
+      become: false
+      when: enable_duckdns | default(false)
+      tags:
+        - duckdns
+
+    - role: network/cloudflare-ddns
+      become: false
+      tags:
+        - cloudflare-ddns
+        - containers
+      when: enable_cloudflare_ddns | default(false)
+
+    - role: network/pihole
+      become: false
+      when: enable_pihole | default(false)
+      tags:
+        - pihole
+        - containers
+    #
+    # FileSystem
+    #
+    - role: filesystem/mergerfs
+      become: true
+      tags:
+        - mergerfs
+      when: enable_nas_stuff | default(false)
+
+    - role: filesystem/mountdisks
+      become: true
+      tags:
+        - mounts
+      when: enable_nas_stuff | default(false)
+
+    #
+    # Homer
+    #
+    - role: homer
+      become: false
+      tags:
+        - homer
+        - containers
+      when: enable_homer | default(false)
+
+    #
+    # Containers - System
+    #
+    - role: containers/system/jackett
+      become: false
+      tags:
+        - jackett
+        - containers
+      when: enable_jackett | default(false)
+
+    - role: containers/system/authelia
+      become: false
+      tags:
+        - authelia
+        - containers
+      when: enable_authelia | default(false)
+
+    - role: containers/system/watchtower
+      become: false
+      tags:
+        - watchtower
+        - containers
+
+    #
+    # Containers - Services
+    #
     - role: containers/services/nextcloud
       tags:
         - nextcloud
         - containers
+
+    #
+    # Samba - Notifications
+    #
+    - role: bertvv.samba
+      become: true
+      tags:
+        - samba
+      when: enable_mail_notifications | default(false)

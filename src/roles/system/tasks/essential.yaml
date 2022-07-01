@@ -23,13 +23,12 @@
       - name: Check if config exists
         stat:
           path: /etc/apt/sources.list
-        register: config_file
 
       - name: Check source list
         blockinfile:
           dest: /etc/apt/sources.list
           block: "{{ lookup('template', 'sources.list.j2') }}"
-          marker: "#; {mark} ANSIBLE MANAGED BLOCK FOR {{ apt_mirror }} {{ version }}"
+          marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ apt_mirror }} {{ version }}"
     tags: mirrors
 
 - name: Generate the locale (Debian and Ubuntu)

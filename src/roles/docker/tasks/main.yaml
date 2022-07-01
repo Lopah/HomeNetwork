@@ -114,9 +114,10 @@
       when: not persistent_data.stat.exists
 
     - name: Restore the "{{ docker_dir }}" folder from the NAS server
-      when: persistent_data_find.matched < 20 or not persistent_data.stat.exists
-      shell:
-        cmd: "scp -l {{ nas_username }} -p {{ nas_password }} /shared/docker/* /docker_data/data/{{ docker_dir }}/"
+      when: persistent_data_find.matched = 0
+      synchronize:
+        src: "{{ nas_username }}@{{ nas_hostname_or_ip }}:/volume1/lopah-server/docker/*"
+        dest: "{{ docker_dir }}/"
 
     - name: Chmod the data folder
       file:

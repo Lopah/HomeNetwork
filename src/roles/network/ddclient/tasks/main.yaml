@@ -10,15 +10,10 @@
     src: ddclient.conf.j2
     dest: /etc/ddclient.conf
   register: config
+  notify: Restart the ddclient service on config change
 
 - name: Make sure the ddclient service is started & enabled
   service:
     name: ddclient
     state: started
     enabled: true
-
-- name: Restart the ddclient service on config change
-  service:
-    name: ddclient
-    state: restarted
-  listen: config.changed

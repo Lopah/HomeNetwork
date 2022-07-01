@@ -14,13 +14,13 @@
     recurse: false
   register: containers
 
-- name: Include all default.yml files
+- name: Include all default.yaml files
   include_vars:
     dir: "{{ playbook_dir }}/{{ item.path }}/defaults"
-    files_matching: main.yml
+    files_matching: main.yaml
     name: "{{ item.path.split('/')[-1] }}"
   with_items: "{{ containers.files }}"
-  no_log: true
+  # no_log: true
 
 - name: Empty the variables (In case the task is called twice)
   set_fact:
@@ -37,7 +37,7 @@
     | default(''), 'endpoint': lookup('vars', item.path.split('/')[-1])['health_url'] \
     | default(''), 'category': lookup('vars', item.path.split('/')[-1])['homer_category'] \
     | default ('') }] }}"
-  when: lookup('vars', 'enable_' + item.path.split('/')[-1]) | default(False)
+  when: lookup('vars', 'enable_' + item.path.split('/')[-1]) | default(false)
   with_items: "{{ containers.files }}"
 
 - name: Populate the URL dictionary with all containers
@@ -46,5 +46,5 @@
     | combine({ item.path.split('/')[-1] : lookup('vars', item.path.split('/')[-1])['dashboard_url'] \
     | default('') \
     | regex_replace('https?://|/*', '') }) }}"
-  when: lookup('vars', 'enable_' + item.path.split('/')[-1]) | default(False)
+  when: lookup('vars', 'enable_' + item.path.split('/')[-1]) | default(false)
   with_items: "{{ containers.files }}"

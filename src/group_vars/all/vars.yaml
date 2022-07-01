@@ -19,9 +19,12 @@ dmz_gateway: "192.168.44.1"
 
 vpn_network: "10.1.1.0/24"
 
-lan_gateway: "192.168.0.1"
+# Should resolve to something similar to 192.168.0.1
+lan_gateway: " {{ '.'.join(ansible_default_ipv4.address.split('.')[0:3]) }}.2"
 
 lan_network: "{{ '.'.join(ansible_default_ipv4.address.split('.')[0:3]) }}.0/24"
+
+nas_hostname_or_ip: "axara-nas"
 
 fish_prompt_color: blue
 
@@ -150,6 +153,8 @@ enable_authelia: true
 enable_pihole: true
 
 enable_watchtower: true
+
+enable_jackett: true
 
 #
 # Time Machine (Recovery points)
@@ -303,6 +308,7 @@ swag_htpasswd_user: ""
 godaddy_api_key: ""
 godaddy_api_secret: ""
 godaddy_customer_id: ""
+
 # host: ""
 # host_local: ""
 # namecheap_host: ""
