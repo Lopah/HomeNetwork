@@ -2,4 +2,8 @@
 ansible-nas-test ansible_connection=local ansible_host=localhost
 
 [home]
-ansible-nas-test ansible_connection=local ansible_host=localhost
+test-pi ansible_connection=ssh ansible_host=192.168.0.215
+
+[testbench]
+lopah-server ansible_connection=ssh ansible_host=lopah-server
+essential-pi ansible_connection=ssh ansible_host=essential-pi

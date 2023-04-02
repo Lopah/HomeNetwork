@@ -19,6 +19,8 @@ dotfiles_repo: https://github.com/lopah/dotfiles
 
 guid: 1000
 
+app_cidr: ""
+
 #
 # Docker apps
 #
@@ -28,16 +30,12 @@ docker_dir: /opt/docker/data
 docker_compose_dir: /opt/docker/compose
 
 services:
-  - homeassistant
   - mqtt
-  - nginxproxymanager
-  - syncthing
 
 #
 # Packages
 #
 extra_packages:
-  - fish
   - iperf3
   - speedtest-cli
   - htop
@@ -51,12 +49,15 @@ extra_packages:
   - lm-sensors
   - iotop
   - ncdu
+  - zsh
 
 #
 # Email credentials (for notifications)
 #
 
-email: lopahmain@gmail.com
+email: subaruthepride@gmail.com
+
+email_to: jasekdan@gmail.com
 
 email_login: '{{ email }}'
 
@@ -89,7 +90,7 @@ security_sudoers_passwordless: ['{{ username }}']
 
 security_autoupdate_reboot: true
 
-security_autoupdate_mail_to: '{{ email }}'
+security_autoupdate_mail_to: '{{ email_to }}'
 
 security_autoupdate_reboot_time: '1:00'
 

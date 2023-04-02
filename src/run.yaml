@@ -1,18 +1,29 @@
 ---
-- hosts: all
+- hosts: home
+  gather_facts: true
   become: true
+
   roles:
     #
-    # Core
+    # Basics
     #
     - role: system
       tags:
         - system
-    - role: docker
+    - name: neovim
+      tags:
+        - neovim
+    - role: geerlingguy.security
+      tags:
+        - security
+    - role: geerlingguy.docker
       tags:
         - docker
 
-    - role: containers/services/nextcloud
+    - role: chriswayg.msmtp-mailer
       tags:
-        - nextcloud
+        - msmtp
+
+    - name: containers
+      tags:
         - containers

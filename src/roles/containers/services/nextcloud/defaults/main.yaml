@@ -1,5 +1,0 @@
-nextcloud_mysql_db: "nextcloud_db"
-
-nextcloud_mysql_user: "nextcloud"
-
-container_name: nextcloud-app

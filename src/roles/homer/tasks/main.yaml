@@ -1,5 +1,0 @@
----
-- include_tasks: list_services.yaml
-- include_tasks: xresources.yaml
-- include_tasks: assets.yaml
-- include_tasks: docker.yaml

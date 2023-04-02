@@ -1,10 +1,10 @@
 ---
 roles:
-  - name: bertvv.samba
+  - name: geerlingguy.repo-epel
   - name: geerlingguy.security
+  - name: geerlingguy.docker
   - name: geerlingguy.ntp
+  - name: geerlingguy.certbot
   - name: chriswayg.msmtp-mailer
-  - name: stuvusit.smartd
-  - name: oefenweb.dns
-  - name: ironicbadger.ansible_role_snapraid
-  - name: veselahouba.crowdsec
+collections:
+- name: community.docker
