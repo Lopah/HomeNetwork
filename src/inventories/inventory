@@ -1,0 +1,8 @@
+[all]
+ansible-nas-test ansible_connection=local ansible_host=localhost ansible_user=lopah
+
+[testbench]
+test-pi ansible_connection=ssh ansible_host=192.168.0.215 ansible_user=lopah
+
+[home]
+test-pi ansible_connection=ssh ansible_host=192.168.0.215 ansible_user=lopah

@@ -1,0 +1,25 @@
+{% if not app_cidr == "" %}
+networks:
+  app:
+    driver: macvlan
+    driver_opts: 
+      parent: app
+    ipam:
+      config:
+        - subnet: {{ app_cidr }}
+{% endif %}
+
+services:
+{% if "mqtt" in services %}
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto
+{% if not app_cidr == "" %}
+    networks:
+      app:
+        ipv4_address: {{ app_base }}.13
+{% endif %}
+    volumes:
+      - "{{ docker_dir }}/mosquitto:/mosquitto"
+    restart: always
+{% endif %}

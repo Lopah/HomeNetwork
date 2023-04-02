@@ -1,0 +1,22 @@
+---
+- name: Chown the repo
+  file:
+      path: '/home/{{ username }}/dotfiles'
+      recurse: true
+      state: directory
+      owner: '{{ username }}'
+      group: '{{ username }}'
+
+- name: Clone the latest dotfiles repo
+  become_user: '{{ username }}'
+  git:
+      repo: '{{ dotfiles_repo }}'
+      dest: '/home/{{ username }}/dotfiles'
+      recursive: false
+      force: true
+
+- name: Run dotbot
+  become_user: '{{ username }}'
+  shell:
+      cmd: sudo sh ./install
+      chdir: '/home/{{ username }}/dotfiles'

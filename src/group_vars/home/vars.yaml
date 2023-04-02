@@ -1,0 +1,97 @@
+#
+# Misc
+#
+hostname: '{{ inventory_hostname }}'
+
+timezone: Europe/Prague
+
+ntp_timezone: '{{ timezone }}'
+
+locale: en_US.UTF-8
+
+keyboard_layout: us
+
+username: lopah
+
+shell: /usr/bin/zsh
+
+dotfiles_repo: https://github.com/lopah/dotfiles
+
+guid: 1000
+
+app_cidr: ""
+
+#
+# Docker apps
+#
+#
+docker_dir: /opt/docker/data
+
+docker_compose_dir: /opt/docker/compose
+
+services:
+  - mqtt
+
+#
+# Packages
+#
+extra_packages:
+  - iperf3
+  - speedtest-cli
+  - htop
+  - exa
+  - git
+  - neofetch
+  - neovim
+  - tmux
+  - mosh
+  - rsync
+  - lm-sensors
+  - iotop
+  - ncdu
+  - zsh
+
+#
+# Email credentials (for notifications)
+#
+
+email: subaruthepride@gmail.com
+
+email_to: jasekdan@gmail.com
+
+email_login: '{{ email }}'
+
+email_smtp_host: smtp.gmail.com
+
+email_smtp_port: 465
+
+email_smtp_port_startls: 587
+
+# MSMTP
+msmtp_accounts:
+    - account: mailbox
+      host: '{{ email_smtp_host }}'
+      port: '{{ email_smtp_port_startls }}'
+      auth: 'on'
+      from: '{{ email }}'
+      user: '{{ email }}'
+      password: '{{ email_password }}'
+
+msmtp_default_account: 'mailbox'
+
+msmtp_alias_default: '{{ email }}'
+
+#
+# SSH (geerlingguy.security)
+#
+security_ssh_port: 22
+
+security_sudoers_passwordless: ['{{ username }}']
+
+security_autoupdate_reboot: true
+
+security_autoupdate_mail_to: '{{ email_to }}'
+
+security_autoupdate_reboot_time: '1:00'
+
+security_autoupdate_mail_on_error: true
