@@ -1,4 +1,4 @@
 ---
 - include_tasks: essential.yaml
-- include_tasks: remove_snapd.yaml
 - include_tasks: user.yaml
+- include_tasks: dotfiles.yaml
