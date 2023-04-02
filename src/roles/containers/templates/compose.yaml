@@ -20,6 +20,6 @@ services:
         ipv4_address: {{ app_base }}.13
 {% endif %}
     volumes:
-      - "{{ docker_dir }}/mosquitto:/mosquitto"
+      - "{{ docker_dir }}/mosquitto:/mosquitto:rw"
     restart: always
 {% endif %}
